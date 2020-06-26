@@ -1,10 +1,12 @@
 ## Setup
 
-cd laravelapi
+<code>cd laravelapi</code>
 
-php artisan key:generate
+<code>composer install</code>
 
-php artisan serve
+<code>php artisan key:generate</code>
+
+<code>php artisan serve</code>
 
 make sure you edit your .env file with your database name, username, and password
 
@@ -14,9 +16,16 @@ make sure you edit your .env file with your database name, username, and passwor
 
 ## End Points
 
-GET http://127.0.0.1:8000/api/notifications  //get all notifications
+GET http://127.0.0.1:8000/api/notifications   <!--Get all notifications -->
 
-POST http://127.0.0.1:8000/api/notifications //create a notification
+GET http://127.0.0.1:8000/api/notifications/{id}   <!--Get a single notifications -->
+
+POST http://127.0.0.1:8000/api/notifications  <!-- Create a notification -->
+
+PUT http://127.0.0.1:8000/api/notifications/{id}   <!--Update a single notifications -->
+
+DELETE http://127.0.0.1:8000/api/notifications/{id}   <!--Delete a single notifications -->
+
 
 ## License
 
