@@ -1,32 +1,31 @@
-## Setup
+# Notification Micro-API
+
+## How to Setup
 
 <code>cd laravelapi</code>
+
+copy .env.example to .env
 
 <code>composer install</code>
 
 <code>php artisan key:generate</code>
 
-<code>php artisan serve</code>
-
-make sure you edit your .env file with your database name, username, and password
-
 <code>php artisan migrate</code>
 
+<code>php artisan serve<code>
 
 
-## End Points
+# Working End Points
 
-GET http://127.0.0.1:8000/api/notifications   <!--Get all notifications -->
+### User Endpoints
 
-GET http://127.0.0.1:8000/api/notifications/{id}   <!--Get a single notifications -->
+POST http://127.0.0.1:8000/api/user/new // creates a new user with params "email" and "recovery_password"
 
-POST http://127.0.0.1:8000/api/notifications  <!-- Create a notification -->
+GET http://127.0.0.1:8000/api/user/retrieve/:email/:recovery_password // get details about an email
 
-PUT http://127.0.0.1:8000/api/notifications/{id}   <!--Update a single notifications -->
+### Notification Endoints
+POST http://127.0.0.1:8000/api/notification/new // creates a notification with params "title", "icon", "body", "email"
 
-DELETE http://127.0.0.1:8000/api/notifications/{id}   <!--Delete a single notifications -->
+GET http://127.0.0.1:8000/api/notification/retrieve/:email // retrieve all notifications by a user
 
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+PUT http://127.0.0.1:8000/api/notification/update/:notification_unique_id // updates a notification with params "title", "icon", "body" and "email"
