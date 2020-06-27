@@ -19,8 +19,17 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 
 
-Route::get('notifications', 'NotificationController@getAllNotifications');
-Route::get('notifications/{id}', 'NotificationController@getNotification');
-Route::post('notifications', 'NotificationController@createNotification');
-Route::put('notifications/{id}', 'NotificationController@updateNotification');
-Route::delete('notifications/{id}','NotificationController@deleteNotification');
+// User Routes
+// ====================================================
+Route::post('user/new', 'UserController@createUser');
+
+Route::get('user/retrieve/{email}/{recovery_password}', 'UserController@getUser');
+
+
+// Notification Routes
+// ==================================================
+Route::post('notification/new', 'NotificationController@createNotification');
+
+Route::get('notification/retrieve/{email}', 'NotificationController@getAllNotifications');
+
+Route::put('notification/update/{notification_unique_id}', 'NotificationController@updateNotification');
