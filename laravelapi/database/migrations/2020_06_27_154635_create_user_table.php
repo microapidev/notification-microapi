@@ -15,7 +15,7 @@ class CreateUserTable extends Migration
     {
         Schema::create('user', function (Blueprint $table) {
             $table->increments('user_unique_id');
-            $table->integer('user_category_id');
+            $table->integer('user_category_id')->unsigned();
             $table->string('email');
             $table->timestamps();
             $table->foreign('user_category_id')->references('category')->on('category');
