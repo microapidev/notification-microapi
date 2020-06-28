@@ -3,12 +3,55 @@
 namespace App\Http\Controllers;
 
 use App\User;
+use App\Notification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Hash;
+use Validator;
 
 class UserController extends Controller
 {
+	public $successStatus = 200;
+	
+	public function registerUser(Request $request){
+	   
+		$validator = Validator::make($request->all(),[
+            
+            'email' => 'required|email',
+			'notification_unique_id' => 'required'
+			
+        ]);
+        
+        
+        if ($validator ->fails()){
+			
+			return response()->json(['error'=>$validator->errors()], 401);
+			
+		}
+		
+		$input = $request->all();
+		
+		if (User::where('email', $input['email'])->exists() && Notification::where('subscribed_users', $input['email'])->exists()){
+		   
+			return response()->json(['error'=>"Email already exist"], 401);
+			
+		}
+		else{
+			
+			
+			$user =DB::table('tbl_notifications')->insertGetId(
+				[
+				'notification_unique_id' => $input['notification_unique_id'],
+				'subscribed_users' => $input['email'],
+				]
+			);
+			
+			
+			return response()->json(['success'=>$input['email'], "message" => "You have successfully register notification"], $this-> successStatus);
+		}
+        
+    
+    }
 
     public function createUser(Request $request) {
 
