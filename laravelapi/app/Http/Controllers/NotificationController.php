@@ -20,7 +20,7 @@ class NotificationController extends Controller
 
         try {
 
-            if ( $request->title != "" && $request->body != "" && $request->icon != "" && $request->email != "" ) {
+            if ( $request->title != "" && $request->body != "" && $request->icon != "" && $request->user_unique_id != "" ) {
 
                 $notification = new Notification;
                 $notification->title = $request->title;
@@ -28,45 +28,43 @@ class NotificationController extends Controller
                 $notification->icon = $request->icon;
                 $notification->notification_unique_id = Str::random(70);
 
-                if ( User::where('email', $request->email)->exists() ){
+                if ( User::where('user_unique_id', $request->user_unique_id)->exists() ){
 
-                    $notification->user_unique_id = User::select('user_unique_id')->where('email', $request->email)->first()->user_unique_id;
+                    $notification->user_unique_id = $request->user_unique_id;
 
                     if ( $notification->save() ) {
-                        
+
                         return response()
-                            ->json([ "status" => "false", "message" => "New Notification Created", "data" => $notification ], 201);
+                            ->json([ "success" => "true", "message" => "New Notification Created", "data" => $notification ], 201);
                     } else {
 
                         return response()
-                            ->json([ "status" => "false", "message" => "Internal Server Error. Please try again" ], 500);
+                            ->json([ "success" => "false", "message" => "Internal Server Error. Please try again" ], 500);
                     }
                 } else {
 
                     return response()
-                        ->json([ "status" => "false", "message" => "This email does not exist" ], 400);
+                        ->json([ "success" => "false", "message" => "This user_unique_id does not exist" ], 400);
                 }
             } else {
 
                 return response()
-                    ->json([ "status" => "false", "message" => "Required parameters not given" ], 400);
+                    ->json([ "success" => "false", "message" => "Required parameters not given" ], 400);
             }
         } catch (Exception $e) {
-            
+
             return response()
-                ->json([ "status" => "false", "message" => "Internal Server Error" ], 500);
+                ->json([ "success" => "false", "message" => "Internal Server Error" ], 500);
         }
     }
 
-    public function getAllNotifications($email) {
+    public function getAllNotifications($user_unique_id) {
 
         try {
 
-            if ( $email != "" ) {
+            if ( $user_unique_id != "" ) {
 
-                if ( User::where('email', $email)->exists() ){
-
-                    $user_unique_id = User::select('user_unique_id')->where('email', $email)->first()->user_unique_id;
+                if ( User::where('user_unique_id', $user_unique_id)->exists() ){
 
                     $check_available_notifications = Notification::where('user_unique_id', $user_unique_id)->get();
 
@@ -79,21 +77,21 @@ class NotificationController extends Controller
                     }
 
                     return response()
-                        ->json([ "status" => "true", "message" => "Notifications Successfully Retrieved", "data" => $notifications ], 200);
+                        ->json([ "success" => "true", "message" => "Notifications Successfully Retrieved", "data" => $notifications ], 200);
                 } else {
 
                     return response()
-                        ->json([ "status" => "false", "message" => "This email does not exist" ], 404);
+                        ->json([ "success" => "false", "message" => "This user_unique_id does not exist" ], 404);
                 }
             } else {
 
                 return response()
-                    ->json([ "status" => "false", "message" => "Required parameter not given" ], 400);
+                    ->json([ "success" => "false", "message" => "Required parameter not given" ], 400);
             }
         } catch (Exception $e) {
-            
+
             return response()
-                ->json([ "status" => "false", "message" => "Internal Server Error" ], 500);
+                ->json([ "success" => "false", "message" => "Internal Server Error" ], 500);
         }
     }
 
@@ -101,19 +99,17 @@ class NotificationController extends Controller
 
         try {
 
-            if ( $notification_unique_id != "" && $request->email != "" ) {
+            if ( $notification_unique_id != "" && $request->user_unique_id != "" ) {
 
-                if ( User::where('email', $request->email)->exists() ){
+                if ( User::where('user_unique_id', $request->user_unique_id)->exists() ){
 
                     if ( $request->title != "" || $request->body != "" || $request->icon != "" ) {
-                        
+
                         if ( Notification::where('notification_unique_id', $notification_unique_id)->exists() ) {
 
                             $notification = Notification::where('notification_unique_id', $notification_unique_id)->first();
 
-                            $user_unique_id = User::select('user_unique_id')->where('email', $request->email)->first()->user_unique_id;
-
-                            if ( $user_unique_id == $notification->user_unique_id ) {
+                            if ( $request->user_unique_id == $notification->user_unique_id ) {
 
                                 $notification->title = is_null($request->title) ? $notification->title : $request->title;
                                 $notification->body = is_null($request->body) ? $notification->body : $request->body;
@@ -122,36 +118,36 @@ class NotificationController extends Controller
                                 $notification->save();
 
                                 return response()
-                                    ->json([ "status" => "true", "message" => "Notification updated successfully", "data" => $notification ], 200);
+                                    ->json([ "success" => "true", "message" => "Notification updated successfully", "data" => $notification ], 200);
                             } else {
 
                                 return response()
-                                    ->json([ "status" => "false", "message" => "This is not yours 😏" ], 400);
+                                    ->json([ "success" => "false", "message" => "This is not yours 😏" ], 400);
                             }
                         } else {
 
                             return response()
-                                ->json([ "status" => "false", "message" => "Notification not found" ], 404);
+                                ->json([ "success" => "false", "message" => "Notification not found" ], 404);
                         }
                     } else {
 
                         return response()
-                            ->json([ "status" => "false", "message" => "No parameter to update given" ], 400);
+                            ->json([ "success" => "false", "message" => "No parameter to update given" ], 400);
                     }
                 } else {
 
                     return response()
-                        ->json([ "status" => "false", "message" => "Email not found" ], 404);
+                        ->json([ "success" => "false", "message" => "user_unique_id not found" ], 404);
                 }
             } else {
 
                 return response()
-                    ->json([ "status" => "false", "message" => "Required parameter not given" ], 400);
+                    ->json([ "success" => "false", "message" => "Required parameter not given" ], 400);
             }
         } catch (Exception $e) {
-            
+
             return response()
-                ->json([ "status" => "false", "message" => "Internal Server Error" ], 500);
+                ->json([ "success" => "false", "message" => "Internal Server Error" ], 500);
         }
     }
 
@@ -176,6 +172,5 @@ class NotificationController extends Controller
     //     }
 
     // }
-
 
 }
