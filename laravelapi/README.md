@@ -12,7 +12,7 @@ copy .env.example to .env
 
 <code>php artisan migrate</code>
 
-<code>php artisan serve<code>
+<code>php artisan serve</code>
 
 ## User Endpoints
 
