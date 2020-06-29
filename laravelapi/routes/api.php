@@ -23,6 +23,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 // ====================================================
 Route::post('user/new', 'UserController@createUser');
 Route::post('register/add', 'UserController@registerUser');
+Route::post('unsubscribe/new', 'UserController@unsubscribeUser');
 Route::get('user/retrieve/{email}/{recovery_password}', 'UserController@getUser');
 
 

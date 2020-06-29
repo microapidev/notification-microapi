@@ -52,6 +52,46 @@ class UserController extends Controller
         
     
     }
+	
+    public function unsubscribeUser(Request $request) {
+
+		
+		
+		try {
+
+			$validator = Validator::make($request->all(),[     
+				'email' => 'required|email'	
+				
+			]);
+			
+			if ($validator ->fails()){
+			
+				return response()->json(['error'=>$validator->errors()], 401);
+				
+			}
+
+			$input = $request->all();
+
+    		if (Notification::where('subscribed_users', $input['email'])->exists()) {
+
+		        DB::table('tbl_notifications')
+					->where('subscribed_users', '=', $input['email'])
+					->delete();
+					return response()
+					->json([ "status" => "True", "message" => "User successfully unsubscribe" ], 201);
+			}else{
+				return response()
+					->json([ "status" => "false", "message" => "Email could not be found" ], 500);
+			}
+
+    	} catch (Exception $e) {
+
+    		return response()
+	        	->json([ "status" => "false", "message" => "Internal Server Error" ], 500);
+    	}
+    }
+        
+
 
     public function createUser(Request $request) {
 
