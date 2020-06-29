@@ -19,9 +19,26 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 
 
+// User Endpoints
+// ====================================================
+Route::post('user/new', 'UserController@createUser'); // working done by: @eni4sure
 
-Route::get('notifications', 'NotificationController@getAllNotifications');
-Route::get('notifications/{id}', 'NotificationController@getNotification');
-Route::post('notifications', 'NotificationController@createNotification');
-Route::put('notifications/{id}', 'NotificationController@updateNotification');
-Route::delete('notifications/{id}','NotificationController@deleteNotification');
+Route::get('user/retrieve/{email}/{recovery_password}', 'UserController@getUser'); // working done by: @eni4sure
+
+// Notification Endpoints
+// ===================================================
+Route::post('notification/new', 'NotificationController@createNotification'); // working done by: @eni4sure
+
+Route::get('notification/retrieve/{user_unique_id}', 'NotificationController@getAllNotifications'); // working done by: @eni4sure
+
+Route::put('notification/update/{notification_unique_id}', 'NotificationController@updateNotification'); // working done by: @eni4sure
+
+// Subscribe Notification Users Endpoints
+// =====================================================
+Route::post('subscribe/new', 'SubscribeController@subscribeUser'); // working done by: @Teemak
+
+Route::post('unsubscribe/new', 'SubscribeController@unsubscribeUser'); // not yet working
+
+// Send Notification Endpoints
+// =====================================================
+Route::post('send', 'SendController@sendNotification'); // not yet working
