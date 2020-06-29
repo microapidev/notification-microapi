@@ -60,7 +60,9 @@ class UserController extends Controller
 		try {
 
 			$validator = Validator::make($request->all(),[     
-				'email' => 'required|email'	
+				'email' => 'required|email',
+                'user_unique_id'=> 'required',
+				'notification_unique_id' => 'required'
 				
 			]);
 			
