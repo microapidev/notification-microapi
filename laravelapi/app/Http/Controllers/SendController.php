@@ -26,3 +26,27 @@ class SendController extends Controller
       }
     }
 }
+
+class NewPostNotify extends Notification
+{
+    use Queueable;
+ 
+    public $post;
+ 
+    public function __construct($post)
+    {
+       $this->post = $post; //Catching New Post
+    }
+ 
+    public function toMail($notifiable)
+    {
+        return (new MailMessage)
+                    ->subject('Hi user, New post availabe')
+                    ->greeting('Hello' , 'Subscriber')
+                    ->line('There is a new post , trust you will like it')
+                    ->line('Post title : '.$this->post->title) //Send with post title
+                    ->action('Read Post' , url(route('post' , $this->post->slug))) //Send with post url
+                    ->line('Thank you for being there!');
+    }
+ 
+}
