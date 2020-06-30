@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use Validator;
 use App\User;
 use App\Notification;
 use Illuminate\Http\Request;
@@ -78,9 +78,43 @@ class SubscribeController extends Controller
                 ->json([ "success" => "false", "message" => "Internal Server Error" ], 500);
         }
     }
+    
+    public function unsubscribeUser(Request $request) {
 
-    public function unsubscribeUser(Request $request){
-        // Write your code here for this endpoint
+
+
+ 		try {
+
+ 			$validator = Validator::make($request->all(),[     
+				'email' => 'required|email',
+                'user_unique_id'=> 'required',
+				'notification_unique_id' => 'required'
+
+ 			]);
+
+ 			if ($validator ->fails()){
+
+ 				return response()->json(['error'=>$validator->errors()], 401);
+
+ 			}
+
+ 			$input = $request->all();
+
+     		if (Notification::where('subscribed_users', $input['email'])->exists()) {
+
+ 		        DB::table('tbl_notifications')
+					->where('subscribed_users', '=', $input['email'])
+					->delete();
+					return response()
+					->json([ "status" => "True", "message" => "User successfully unsubscribe" ], 201);
+			}else{
+				return response()
+					->json([ "status" => "false", "message" => "Email could not be found" ], 500);
+			}
+
+     	} catch (Exception $e) {
+
+     		return response()
+	        	->json([ "status" => "false", "message" => "Internal Server Error" ], 500);
+    	}
     }
-
-}
