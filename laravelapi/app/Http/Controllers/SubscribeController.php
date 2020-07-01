@@ -1,33 +1,31 @@
 <?php
 
 namespace App\Http\Controllers;
-use Validator;
 use App\User;
-use App\Notification;
+use App\NotificationModel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Hash;
 
 class SubscribeController extends Controller
 {
-
-    public function subscribeUser(Request $request) {
-
+    public function subscribeUser(Request $request)
+    {
         try {
 
             if ( $request->user_unique_id != "" && $request->notification_unique_id != "" && $request->email != "" ) {
 
-                if ( User::where('user_unique_id', $request->user_unique_id)->exists() ){
+                if ( User::where('user_unique_id', $request->user_unique_id)->exists() ) {
 
-                    if ( Notification::where('notification_unique_id', $request->notification_unique_id)->exists() ) {
+                    if ( NotificationModel::where('notification_unique_id', $request->notification_unique_id)->exists() ) {
 
-                        $notification = Notification::where('notification_unique_id', $request->notification_unique_id)->first();
+                        $notification = NotificationModel::where('notification_unique_id', $request->notification_unique_id)->first();
 
                         if ( $request->user_unique_id == $notification->user_unique_id ) {
 
                             $new_subscribed_users = array();
 
-                            if ( $notification->subscribed_users == "" || $notification->subscribed_users == NULL ) {
+                            if ( $notification->subscribed_users == "" || $notification->subscribed_users == null ) {
 
                                 $new_subscribed_users[] = $request->email;
                             } else {
@@ -36,14 +34,14 @@ class SubscribeController extends Controller
 
                                 // Linear Search
                                 for ( $i=0; $i < sizeof($new_subscribed_users); $i++ ) {
-                                    if( $new_subscribed_users[$i] == $request->email ){
+                                    if ($new_subscribed_users[$i] == $request->email) {
                                         return response()
                                             ->json([ "success" => "false", "message" => "This Email is already subscribed to this notification" ], 200);
                                         exit(0);
                                     }
                                 }
 
-                                array_push( $new_subscribed_users, $request->email );
+                                array_push($new_subscribed_users, $request->email);
                             }
 
                             $notification->subscribed_users = $new_subscribed_users;
@@ -53,68 +51,98 @@ class SubscribeController extends Controller
                             return response()
                                 ->json([ "success" => "true", "message" => "Email subscribed to this notification successful", "data" => $notification ], 200);
                         } else {
-
                             return response()
                                 ->json([ "success" => "false", "message" => "This is not yours 😏" ], 400);
                         }
                     } else {
-
                         return response()
                             ->json([ "success" => "false", "message" => "Notification not found" ], 404);
                     }
                 } else {
-
                     return response()
                         ->json([ "success" => "false", "message" => "user_unique_id not found" ], 404);
                 }
             } else {
-
                 return response()
                     ->json([ "success" => "false", "message" => "Required parameter not given" ], 400);
             }
         } catch (Exception $e) {
-
             return response()
                 ->json([ "success" => "false", "message" => "Internal Server Error" ], 500);
         }
     }
-    
-    public function unsubscribeUser(Request $request) {
 
+    public function unsubscribeUser(Request $request)
+    {
+        try {
 
+            if ( $request->user_unique_id != "" && $request->notification_unique_id != "" && $request->email != "" ) {
 
- 		try {
+                if ( User::where('user_unique_id', $request->user_unique_id)->exists() ) {
 
- 			$validator = Validator::make($request->all(),[     
-				'email' => 'required|email',
-                'user_unique_id'=> 'required',
-				'notification_unique_id' => 'required'
+                    if ( NotificationModel::where('notification_unique_id', $request->notification_unique_id)->exists() ) {
 
- 			]);
+                        $notification = NotificationModel::where('notification_unique_id', $request->notification_unique_id)->first();
 
- 			if ($validator ->fails()){
+                        if ( $request->user_unique_id == $notification->user_unique_id ) {
 
- 				return response()->json(['error'=>$validator->errors()], 401);
+                            $new_subscribed_users = array();
 
- 			}
+                            if ( $notification->subscribed_users == "" || $notification->subscribed_users == null ) {
 
- 			$input = $request->all();
+                                return response()
+                                    ->json([ "success" => "false", "message" => "This notification does not have any subscribed users" ], 404);
+                                    exit(0);
+                            } else {
 
-     		if (Notification::where('subscribed_users', $input['email'])->exists()) {
+                                $new_subscribed_users = $notification->subscribed_users;
 
- 		        DB::table('tbl_notifications')
-					->where('subscribed_users', '=', $input['email'])
-					->delete();
-					return response()
-					->json([ "status" => "True", "message" => "User successfully unsubscribe" ], 201);
-			}else{
-				return response()
-					->json([ "status" => "false", "message" => "Email could not be found" ], 500);
-			}
+                                // Linear Search
+                                for ( $i=0; $i < sizeof($new_subscribed_users); $i++ ) {
+                                    if ($new_subscribed_users[$i] == $request->email) {
 
-     	} catch (Exception $e) {
+                                        unset($new_subscribed_users[$i]);
 
-     		return response()
-	        	->json([ "status" => "false", "message" => "Internal Server Error" ], 500);
-    	}
+                                        sort($new_subscribed_users);
+
+                                        if ( count($notification->subscribed_users) == 0 ) {
+
+                                            $notification->subscribed_users = NULL;
+                                        } else {
+
+                                            $notification->subscribed_users = $new_subscribed_users;
+                                        }
+
+                                        $notification->save();
+
+                                        return response()
+                                            ->json([ "success" => "true", "message" => "Email unsubscribed from this notification successful", "data" => $notification ], 200);
+                                        exit(0);
+                                    }
+                                }
+
+                                return response()
+                                    ->json([ "success" => "false", "message" => "This email was not found in the subscribed users" ], 404);
+                            }
+                        } else {
+                            return response()
+                                ->json([ "success" => "false", "message" => "This is not yours 😏" ], 400);
+                        }
+                    } else {
+                        return response()
+                            ->json([ "success" => "false", "message" => "Notification not found" ], 404);
+                    }
+                } else {
+                    return response()
+                        ->json([ "success" => "false", "message" => "user_unique_id not found" ], 404);
+                }
+            } else {
+                return response()
+                    ->json([ "success" => "false", "message" => "Required parameter not given" ], 400);
+            }
+        } catch (Exception $e) {
+            return response()
+                ->json([ "success" => "false", "message" => "Internal Server Error" ], 500);
+        }
     }
+}

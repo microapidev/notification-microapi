@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\User;
-use App\Notification;
+use App\NotificationModel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Hash;
@@ -31,7 +31,7 @@ class UserController extends Controller
 		        if ( $user->save() ) {
 
 			        return response()
-			        	->json([ "success" => "true", "message" => "New User Created" ], 201);
+			        	->json([ "success" => "true", "message" => "New User Created", "data" => $user ], 201);
 		        } else {
 
 			        return response()
