@@ -4,7 +4,7 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <title>Laravel</title>
+        <title>Notifications</title>
 
         <!-- Fonts -->
         <link href="https://fonts.googleapis.com/css?family=Nunito:200,600" rel="stylesheet">
@@ -44,9 +44,9 @@
                 text-align: center;
             }
 
-            .title {
+            /*.title {
                 font-size: 84px;
-            }
+            }*/
 
             .links > a {
                 color: #636b6f;
@@ -54,7 +54,7 @@
                 font-size: 13px;
                 font-weight: 600;
                 letter-spacing: .1rem;
-                text-decoration: none;
+                text-decoration: underline;
                 text-transform: uppercase;
             }
 
@@ -65,34 +65,14 @@
     </head>
     <body>
         <div class="flex-center position-ref full-height">
-            @if (Route::has('login'))
-                <div class="top-right links">
-                    @auth
-                        <a href="{{ url('/home') }}">Home</a>
-                    @else
-                        <a href="{{ route('login') }}">Login</a>
-
-                        @if (Route::has('register'))
-                            <a href="{{ route('register') }}">Register</a>
-                        @endif
-                    @endauth
-                </div>
-            @endif
 
             <div class="content">
                 <div class="title m-b-md">
-                    Laravel
+                    <h1>Notifications MicroAPI</h1>
                 </div>
 
                 <div class="links">
-                    <a href="https://laravel.com/docs">Docs</a>
-                    <a href="https://laracasts.com">Laracasts</a>
-                    <a href="https://laravel-news.com">News</a>
-                    <a href="https://blog.laravel.com">Blog</a>
-                    <a href="https://nova.laravel.com">Nova</a>
-                    <a href="https://forge.laravel.com">Forge</a>
-                    <a href="https://vapor.laravel.com">Vapor</a>
-                    <a href="https://github.com/laravel/laravel">GitHub</a>
+                    <a href="https://documenter.getpostman.com/view/11899454/T17DgUHn?version=latest">See Docs</a>
                 </div>
             </div>
         </div>
