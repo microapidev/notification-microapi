@@ -25,6 +25,7 @@ COPY . /var/www
 ADD ./public /var/www/html
 
 RUN composer install
+COPY .env.example .env
 RUN php artisan key:generate
 
 # expose port
