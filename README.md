@@ -17,7 +17,7 @@
 Fork The Repo And Clone Your Fork
 
 ```bash
-cd notification-microapi/laravelapi
+cd notification-microapi
 ```
 ```bash
 git remote add upstream https://github.com/microapidev/notification-microapi.git
@@ -64,4 +64,6 @@ Then Create Your Pull Request
 
 - **Add description of what you did in your pull request** <br>
 
-## Testing
+## Testing & Usage
+
+Go to the docs - https://documenter.getpostman.com/view/11899454/T17DgUHn?version=latest

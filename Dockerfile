@@ -25,10 +25,11 @@ COPY . /var/www
 ADD ./public /var/www/html
 
 RUN composer install
+COPY .env.example .env
 RUN php artisan key:generate
 
 # expose port
 EXPOSE 8000
 
 # run application
-CMD php artisan serve --port=8000
+CMD php artisan serve --host=0.0.0.0 --port=8000
