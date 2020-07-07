@@ -40,10 +40,10 @@ class SubscribeController extends Controller
                                                 "success" => "false",
                                                 "message" => "This Email is already subscribed to this notification",
                                                 "error" => [
-                                                    "status_code" => "200",
+                                                    "status_code" => "400",
                                                     "message" => "This Email is already subscribed to this notification"
                                                 ]
-                                            ], 200);
+                                            ], 400);
                                         exit(0);
                                     }
                                 }
