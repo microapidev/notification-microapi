@@ -105,7 +105,9 @@ class NotificationController extends Controller
                         $notifications = NotificationModel::where('user_unique_id', $user_unique_id)->get();
                     } else {
 
-                        $notifications = "No notification created yet";
+                        $notifications = [
+                            "message" => "No notification created yet"
+                        ];
                     }
 
                     return response()

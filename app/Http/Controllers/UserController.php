@@ -29,10 +29,10 @@ class UserController extends Controller
                             "success" => "false",
                             "message" => "Email already exists",
                             "error" => [
-                                "status_code" => "500",
+                                "status_code" => "400",
                                 "message" => "Email already exists"
                             ]
-                        ], 500);
+                        ], 400);
 				}
 
 		        if ( $user->save() ) {
