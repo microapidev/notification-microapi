@@ -35,26 +35,58 @@ class NotificationController extends Controller
                     if ( $notification->save() ) {
 
                         return response()
-                            ->json([ "success" => "true", "message" => "New Notification Created", "data" => $notification ], 201);
+                            ->json([
+                                "success" => "true",
+                                "message" => "New Notification Created",
+                                "data" => $notification
+                            ], 201);
                     } else {
 
                         return response()
-                            ->json([ "success" => "false", "message" => "Internal Server Error. Please try again" ], 500);
+                            ->json([
+                                "success" => "false",
+                                "message" => "Internal Server Error. Please try again",
+                                "error" => [
+                                    "status_code" => "500",
+                                    "message" => "Internal Server Error. Please try again"
+                                ]
+                            ], 500);
                     }
                 } else {
 
                     return response()
-                        ->json([ "success" => "false", "message" => "This user_unique_id does not exist" ], 400);
+                        ->json([
+                            "success" => "false",
+                            "message" => "This user_unique_id does not exist",
+                            "error" => [
+                                "status_code" => "400",
+                                "message" => "This user_unique_id does not exist"
+                            ]
+                        ], 400);
                 }
             } else {
 
                 return response()
-                    ->json([ "success" => "false", "message" => "Required parameters not given" ], 400);
+                    ->json([
+                        "success" => "false",
+                        "message" => "Required parameters not given",
+                        "error" => [
+                            "status_code" => "400",
+                            "message" => "Required parameters not given"
+                        ]
+                    ], 400);
             }
         } catch (Exception $e) {
 
             return response()
-                ->json([ "success" => "false", "message" => "Internal Server Error" ], 500);
+                ->json([
+                    "success" => "false",
+                    "message" => "Internal Server Error",
+                    "error" => [
+                        "status_code" => "500",
+                        "message" => "Internal Server Error"
+                    ]
+                ], 500);
         }
     }
 
@@ -77,21 +109,46 @@ class NotificationController extends Controller
                     }
 
                     return response()
-                        ->json([ "success" => "true", "message" => "Notifications Successfully Retrieved", "data" => $notifications ], 200);
+                        ->json([
+                            "success" => "true",
+                            "message" => "Notifications Successfully Retrieved",
+                            "data" => $notifications
+                        ], 200);
                 } else {
 
                     return response()
-                        ->json([ "success" => "false", "message" => "This user_unique_id does not exist" ], 404);
+                        ->json([
+                            "success" => "false",
+                            "message" => "This user_unique_id does not exist",
+                            "error" => [
+                                "status_code" => "404",
+                                "message" => "This user_unique_id does not exist"
+                            ]
+                        ], 404);
                 }
             } else {
 
                 return response()
-                    ->json([ "success" => "false", "message" => "Required parameter not given" ], 400);
+                    ->json([
+                        "success" => "false",
+                        "message" => "Required parameter not given",
+                        "error" => [
+                            "status_code" => "400",
+                            "message" => "Required parameter not given"
+                        ]
+                    ], 400);
             }
         } catch (Exception $e) {
 
             return response()
-                ->json([ "success" => "false", "message" => "Internal Server Error" ], 500);
+                ->json([
+                    "success" => "false",
+                    "message" => "Internal Server Error",
+                    "error" => [
+                        "status_code" => "500",
+                        "message" => "Internal Server Error"
+                    ]
+                ], 500);
         }
     }
 
@@ -118,36 +175,82 @@ class NotificationController extends Controller
                                 $notification->save();
 
                                 return response()
-                                    ->json([ "success" => "true", "message" => "Notification updated successfully", "data" => $notification ], 200);
+                                    ->json([
+                                        "success" => "true",
+                                        "message" => "Notification updated successfully",
+                                        "data" => $notification
+                                    ], 200);
                             } else {
 
                                 return response()
-                                    ->json([ "success" => "false", "message" => "This is not yours 😏" ], 400);
+                                    ->json([
+                                        "success" => "false",
+                                        "message" => "This is not yours 😏",
+                                        "error" => [
+                                            "status_code" => "400",
+                                            "message" => "This is not yours 😏"
+                                        ]
+                                    ], 400);
                             }
                         } else {
 
                             return response()
-                                ->json([ "success" => "false", "message" => "Notification not found" ], 404);
+                                ->json([
+                                    "success" => "false",
+                                    "message" => "Notification not found",
+                                    "error" => [
+                                        "status_code" => "404",
+                                        "message" => "Notification not found"
+                                    ]
+                                ], 404);
                         }
                     } else {
 
                         return response()
-                            ->json([ "success" => "false", "message" => "No parameter to update given" ], 400);
+                            ->json([
+                                "success" => "false",
+                                "message" => "No parameter to update given",
+                                "error" => [
+                                    "status_code" => "400",
+                                    "message" => "No parameter to update given"
+                                ]
+                            ], 400);
                     }
                 } else {
 
                     return response()
-                        ->json([ "success" => "false", "message" => "user_unique_id not found" ], 404);
+                        ->json([
+                            "success" => "false",
+                            "message" => "user_unique_id not found",
+                            "error" => [
+                                "status_code" => "404",
+                                "message" => "user_unique_id not found"
+                            ]
+                        ], 404);
                 }
             } else {
 
                 return response()
-                    ->json([ "success" => "false", "message" => "Required parameter not given" ], 400);
+                    ->json([
+                        "success" => "false",
+                        "message" => "Required parameter not given",
+                        "error" => [
+                            "status_code" => "400",
+                            "message" => "Required parameter not given"
+                        ]
+                    ], 400);
             }
         } catch (Exception $e) {
 
             return response()
-                ->json([ "success" => "false", "message" => "Internal Server Error" ], 500);
+                ->json([
+                    "success" => "false",
+                    "message" => "Internal Server Error",
+                    "error" => [
+                        "status_code" => "500",
+                        "message" => "Internal Server Error"
+                    ]
+                ], 500);
         }
     }
 
@@ -170,7 +273,6 @@ class NotificationController extends Controller
     //         "message" => "Notification not found"
     //     ], 404);
     //     }
-
     // }
 
 }
