@@ -31,7 +31,14 @@ class SendController extends Controller
                             if ( $notification->subscribed_users == "" || $notification->subscribed_users == null ) {
 
                                 return response()
-                                    ->json([ "success" => "false", "message" => "This notification does not have any subscribed users to send message to" ], 404);
+                                    ->json([
+                                        "success" => "false",
+                                        "message" => "This notification does not have any subscribed users to send message to",
+                                        "error" => [
+                                            "status_code" => "404",
+                                            "message" => "This notification does not have any subscribed users to send message to"
+                                        ]
+                                    ], 404);
                                     exit(0);
                             } else {
 
@@ -45,27 +52,65 @@ class SendController extends Controller
                                 }
 
                                 return response()
-                                    ->json([ "success" => "true", "message" => "Notification sent successful" ], 200);
+                                    ->json([
+                                        "success" => "true",
+                                        "message" => "Notification sent successful"
+                                    ], 200);
                             }
                         } else {
                             return response()
-                                ->json([ "success" => "false", "message" => "This is not yours 😏" ], 400);
+                                ->json([
+                                    "success" => "false",
+                                    "message" => "This is not yours 😏",
+                                    "error" => [
+                                        "status_code" => "400",
+                                        "message" => "This is not yours 😏"
+                                    ]
+                                ], 400);
                         }
                     } else {
                         return response()
-                            ->json([ "success" => "false", "message" => "Notification not found" ], 404);
+                            ->json([
+                                "success" => "false",
+                                "message" => "Notification not found",
+                                "error" => [
+                                    "status_code" => "404",
+                                    "message" => "Notification not found"
+                                ]
+                            ], 404);
                     }
                 } else {
                     return response()
-                        ->json([ "success" => "false", "message" => "user_unique_id not found" ], 404);
+                        ->json([
+                            "success" => "false",
+                            "message" => "user_unique_id not found",
+                            "error" => [
+                                "status_code" => "404",
+                                "message" => "user_unique_id not found"
+                            ]
+                        ], 404);
                 }
             } else {
                 return response()
-                    ->json([ "success" => "false", "message" => "Required parameter not given" ], 400);
+                    ->json([
+                        "success" => "false",
+                        "message" => "Required parameter not given",
+                        "error" => [
+                            "status_code" => "400",
+                            "message" => "Required parameter not given"
+                        ]
+                    ], 400);
             }
         } catch (Exception $e) {
             return response()
-                ->json([ "success" => "false", "message" => "Internal Server Error" ], 500);
+                ->json([
+                    "success" => "false",
+                    "message" => "Internal Server Error",
+                    "error" => [
+                        "status_code" => "500",
+                        "message" => "Internal Server Error"
+                    ]
+                ], 500);
         }
     }
 }
