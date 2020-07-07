@@ -36,7 +36,14 @@ class SubscribeController extends Controller
                                 for ( $i=0; $i < sizeof($new_subscribed_users); $i++ ) {
                                     if ($new_subscribed_users[$i] == $request->email) {
                                         return response()
-                                            ->json([ "success" => "false", "message" => "This Email is already subscribed to this notification" ], 200);
+                                            ->json([
+                                                "success" => "false",
+                                                "message" => "This Email is already subscribed to this notification",
+                                                "error" => [
+                                                    "status_code" => "200",
+                                                    "message" => "This Email is already subscribed to this notification"
+                                                ]
+                                            ], 200);
                                         exit(0);
                                     }
                                 }
@@ -49,26 +56,65 @@ class SubscribeController extends Controller
                             $notification->save();
 
                             return response()
-                                ->json([ "success" => "true", "message" => "Email subscribed to this notification successful", "data" => $notification ], 200);
+                                ->json([
+                                    "success" => "true",
+                                    "message" => "Email subscribed to this notification successful",
+                                    "data" => $notification
+                                ], 200);
                         } else {
                             return response()
-                                ->json([ "success" => "false", "message" => "This is not yours 😏" ], 400);
+                                ->json([
+                                    "success" => "false",
+                                    "message" => "This is not yours 😏",
+                                    "error" => [
+                                        "status_code" => "400",
+                                        "message" => "This is not yours 😏"
+                                    ]
+                                ], 400);
                         }
                     } else {
                         return response()
-                            ->json([ "success" => "false", "message" => "Notification not found" ], 404);
+                            ->json([
+                                "success" => "false",
+                                "message" => "Notification not found",
+                                "error" => [
+                                    "status_code" => "404",
+                                    "message" => "Notification not found"
+                                ]
+                            ], 404);
                     }
                 } else {
                     return response()
-                        ->json([ "success" => "false", "message" => "user_unique_id not found" ], 404);
+                        ->json([
+                            "success" => "false",
+                            "message" => "user_unique_id not found",
+                            "error" => [
+                                "status_code" => "404",
+                                "message" => "user_unique_id not found"
+                            ]
+                        ], 404);
                 }
             } else {
                 return response()
-                    ->json([ "success" => "false", "message" => "Required parameter not given" ], 400);
+                    ->json([
+                        "success" => "false",
+                        "message" => "Required parameter not given",
+                        "error" => [
+                            "status_code" => "400",
+                            "message" => "Required parameter not given"
+                        ]
+                    ], 400);
             }
         } catch (Exception $e) {
             return response()
-                ->json([ "success" => "false", "message" => "Internal Server Error" ], 500);
+                ->json([
+                    "success" => "false",
+                    "message" => "Internal Server Error",
+                    "error" => [
+                        "status_code" => "500",
+                        "message" => "Internal Server Error"
+                    ]
+                ], 500);
         }
     }
 
@@ -91,7 +137,14 @@ class SubscribeController extends Controller
                             if ( $notification->subscribed_users == "" || $notification->subscribed_users == null ) {
 
                                 return response()
-                                    ->json([ "success" => "false", "message" => "This notification does not have any subscribed users" ], 404);
+                                    ->json([
+                                        "success" => "false",
+                                        "message" => "This notification does not have any subscribed users",
+                                        "error" => [
+                                            "status_code" => "404",
+                                            "message" => "This notification does not have any subscribed users"
+                                        ]
+                                    ], 404);
                                     exit(0);
                             } else {
 
@@ -116,33 +169,79 @@ class SubscribeController extends Controller
                                         $notification->save();
 
                                         return response()
-                                            ->json([ "success" => "true", "message" => "Email unsubscribed from this notification successful", "data" => $notification ], 200);
+                                            ->json([
+                                                "success" => "true",
+                                                "message" => "Email unsubscribed from this notification successful",
+                                                "data" => $notification
+                                            ], 200);
                                         exit(0);
                                     }
                                 }
 
                                 return response()
-                                    ->json([ "success" => "false", "message" => "This email was not found in the subscribed users" ], 404);
+                                    ->json([
+                                        "success" => "false",
+                                        "message" => "This email was not found in the subscribed users",
+                                        "error" => [
+                                            "status_code" => "404",
+                                            "message" => "This email was not found in the subscribed users"
+                                        ]
+                                    ], 404);
                             }
                         } else {
                             return response()
-                                ->json([ "success" => "false", "message" => "This is not yours 😏" ], 400);
+                                ->json([
+                                    "success" => "false",
+                                    "message" => "This is not yours 😏",
+                                    "error" => [
+                                        "status_code" => "400",
+                                        "message" => "This is not yours 😏"
+                                    ]
+                                ], 400);
                         }
                     } else {
                         return response()
-                            ->json([ "success" => "false", "message" => "Notification not found" ], 404);
+                            ->json([
+                                "success" => "false",
+                                "message" => "Notification not found",
+                                "error" => [
+                                    "status_code" => "404",
+                                    "message" => "Notification not found"
+                                ]
+                            ], 404);
                     }
                 } else {
                     return response()
-                        ->json([ "success" => "false", "message" => "user_unique_id not found" ], 404);
+                        ->json([
+                            "success" => "false",
+                            "message" => "user_unique_id not found",
+                            "error" => [
+                                "status_code" => "404",
+                                "message" => "user_unique_id not found"
+                            ]
+                        ], 404);
                 }
             } else {
                 return response()
-                    ->json([ "success" => "false", "message" => "Required parameter not given" ], 400);
+                    ->json([
+                        "success" => "false",
+                        "message" => "Required parameter not given",
+                        "error" => [
+                            "status_code" => "400",
+                            "message" => "Required parameter not given"
+                        ]
+                    ], 400);
             }
         } catch (Exception $e) {
             return response()
-                ->json([ "success" => "false", "message" => "Internal Server Error" ], 500);
+                ->json([
+                    "success" => "false",
+                    "message" => "Internal Server Error",
+                    "error" => [
+                        "status_code" => "500",
+                        "message" => "Internal Server Error"
+                    ]
+                ], 500);
         }
     }
 }
