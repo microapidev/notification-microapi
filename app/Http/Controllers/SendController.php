@@ -46,9 +46,31 @@ class SendController extends Controller
 
                                 for ($i=0; $i < sizeof($new_subscribed_users); $i++) {
 
-                                    Notification::route('mail', $new_subscribed_users[$i])
-                                                // ->route('nexmo', '5555555555')
-                                                ->notify(new SendMessage( $notification, $new_subscribed_users[$i] ));
+                                    // For offline usage.
+                                    // Notification::route('mail', $new_subscribed_users[$i])
+                                    //             // ->route('nexmo', '5555555555')
+                                    //             ->notify(new SendMessage( $notification, $new_subscribed_users[$i] ));
+
+                                    $curl = curl_init();
+
+                                    curl_setopt_array($curl, array(
+                                        CURLOPT_URL => "https://email.microapi.dev/v1/sendmail/",
+                                        CURLOPT_RETURNTRANSFER => true,
+                                        CURLOPT_ENCODING => "",
+                                        CURLOPT_MAXREDIRS => 10,
+                                        CURLOPT_TIMEOUT => 0,
+                                        CURLOPT_FOLLOWLOCATION => true,
+                                        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                                        CURLOPT_CUSTOMREQUEST => "POST",
+                                        CURLOPT_POSTFIELDS =>"{\r\n    \"recipient\": \"".$new_subscribed_users[$i]."\",\r\n    \"sender\": \"femiadenuga@mazzacash.com\",\r\n    \"subject\": \"".$notification->title."\",\r\n    \"body\": \"".$notification->body."\",\r\n    \"bcc\": \"\",\r\n    \"cc\": \"\"\r\n}",
+                                        CURLOPT_HTTPHEADER => array(
+                                            "Content-Type: application/json"
+                                        ),
+                                    ));
+
+                                    $response = curl_exec($curl);
+
+                                    curl_close($curl);
                                 }
 
                                 return response()
