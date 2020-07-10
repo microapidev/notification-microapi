@@ -23,7 +23,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 // ====================================================
 Route::post('user/new', 'UserController@createUser'); // works well and done by: @eni4sure
 
-Route::get('user/retrieve/{email}/{recovery_password}', 'UserController@getUser'); // works well and done by: @eni4sure
+Route::post('user/retrieve/{email}/{recovery_password}', 'UserController@getUser'); // works well and done by: @eni4sure
 
 // Notification Endpoints
 // ===================================================
