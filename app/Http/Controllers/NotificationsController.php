@@ -2,33 +2,27 @@
 
 namespace App\Http\Controllers;
 
-use App\User;
-use App\NotificationModel;
+use App\UsersModel;
+use App\NotificationsModel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Hash;
 
-class NotificationController extends Controller
+class NotificationsController extends Controller
 {
-
-    // public function getAllNotifications() {
-    //     $notifications = NotificationModel::get()->toJson(JSON_PRETTY_PRINT);
-    //     return response($notifications, 200);
-    // }
 
     public function createNotification(Request $request) {
 
         try {
 
-            if ( $request->title != "" && $request->body != "" && $request->icon != "" && $request->user_unique_id != "" ) {
+            if ( $request->title != "" && $request->body != "" && $request->user_unique_id != "" ) {
 
-                $notification = new NotificationModel;
+                $notification = new NotificationsModel;
                 $notification->title = $request->title;
                 $notification->body = $request->body;
-                $notification->icon = $request->icon;
-                $notification->notification_unique_id = Str::random(70);
+                $notification->notification_unique_id = Str::random(50);
 
-                if ( User::where('user_unique_id', $request->user_unique_id)->exists() ){
+                if ( UsersModel::where('user_unique_id', $request->user_unique_id)->exists() ){
 
                     $notification->user_unique_id = $request->user_unique_id;
 
@@ -96,13 +90,13 @@ class NotificationController extends Controller
 
             if ( $user_unique_id != "" ) {
 
-                if ( User::where('user_unique_id', $user_unique_id)->exists() ){
+                if ( UsersModel::where('user_unique_id', $user_unique_id)->exists() ){
 
-                    $check_available_notifications = NotificationModel::where('user_unique_id', $user_unique_id)->get();
+                    $check_available_notifications = NotificationsModel::where('user_unique_id', $user_unique_id)->get();
 
                     if ( count($check_available_notifications) != 0 ) {
 
-                        $notifications = NotificationModel::where('user_unique_id', $user_unique_id)->get();
+                        $notifications = NotificationsModel::where('user_unique_id', $user_unique_id)->get();
                     } else {
 
                         $notifications = [
@@ -160,19 +154,18 @@ class NotificationController extends Controller
 
             if ( $notification_unique_id != "" && $request->user_unique_id != "" ) {
 
-                if ( User::where('user_unique_id', $request->user_unique_id)->exists() ){
+                if ( UsersModel::where('user_unique_id', $request->user_unique_id)->exists() ){
 
-                    if ( $request->title != "" || $request->body != "" || $request->icon != "" ) {
+                    if ( $request->title != "" || $request->body != "" ) {
 
-                        if ( NotificationModel::where('notification_unique_id', $notification_unique_id)->exists() ) {
+                        if ( NotificationsModel::where('notification_unique_id', $notification_unique_id)->exists() ) {
 
-                            $notification = NotificationModel::where('notification_unique_id', $notification_unique_id)->first();
+                            $notification = NotificationsModel::where('notification_unique_id', $notification_unique_id)->first();
 
                             if ( $request->user_unique_id == $notification->user_unique_id ) {
 
                                 $notification->title = is_null($request->title) ? $notification->title : $request->title;
                                 $notification->body = is_null($request->body) ? $notification->body : $request->body;
-                                $notification->icon = is_null($request->icon) ? $notification->icon : $request->icon;
 
                                 $notification->save();
 
@@ -256,25 +249,86 @@ class NotificationController extends Controller
         }
     }
 
-    // Not needed
-    // public function deleteNotification ($id) {
-    //     // logic to delete a Notification record goes here
+    public function deleteNotification(Request $request, $notification_unique_id) {
+        try {
 
-    //     if (NotificationModel::where('id', $id)->exists()) {
+            if ( $notification_unique_id != "" && $request->user_unique_id != "" ) {
 
-    //     $notification = NotificationModel::find($id);
+                if ( UsersModel::where('user_unique_id', $request->user_unique_id)->exists() ){
 
-    //     $notification->delete();
+                    if ( NotificationsModel::where('notification_unique_id', $notification_unique_id)->exists() ) {
 
-    //     return response()->json([
-    //         "message" => "Notification record deleted"
-    //     ], 202);
+                        $notification = NotificationsModel::where('notification_unique_id', $notification_unique_id)->first();
 
-    //     } else {
-    //     return response()->json([
-    //         "message" => "Notification not found"
-    //     ], 404);
-    //     }
-    // }
+                        if ( $request->user_unique_id == $notification->user_unique_id ) {
 
+                            $notification->delete();
+
+                            return response()
+                                ->json([
+                                    "success" => "true",
+                                    "message" => "Notification deleted successfully",
+                                    "data" => $notification
+                                ], 202);
+                        } else {
+
+                            return response()
+                                ->json([
+                                    "success" => "false",
+                                    "message" => "This is not yours 😏",
+                                    "error" => [
+                                        "status_code" => "400",
+                                        "message" => "This is not yours 😏"
+                                    ]
+                                ], 400);
+                        }
+                    } else {
+
+                        return response()
+                            ->json([
+                                "success" => "false",
+                                "message" => "Notification not found",
+                                "error" => [
+                                    "status_code" => "404",
+                                    "message" => "Notification not found"
+                                ]
+                            ], 404);
+                    }
+                } else {
+
+                    return response()
+                        ->json([
+                            "success" => "false",
+                            "message" => "user_unique_id not found",
+                            "error" => [
+                                "status_code" => "404",
+                                "message" => "user_unique_id not found"
+                            ]
+                        ], 404);
+                }
+            } else {
+
+                return response()
+                    ->json([
+                        "success" => "false",
+                        "message" => "Required parameter not given",
+                        "error" => [
+                            "status_code" => "400",
+                            "message" => "Required parameter not given"
+                        ]
+                    ], 400);
+            }
+        } catch (Exception $e) {
+
+            return response()
+                ->json([
+                    "success" => "false",
+                    "message" => "Internal Server Error",
+                    "error" => [
+                        "status_code" => "500",
+                        "message" => "Internal Server Error"
+                    ]
+                ], 500);
+        }
+    }
 }
